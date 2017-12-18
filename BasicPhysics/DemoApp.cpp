@@ -118,6 +118,7 @@ void CDemoApp::Control( float timeDiff )
 
 	//-------------Rellenamos el evento de ratón---------------------------
 	//Si es un click izquiero creamos una bola.
+	//TODO: Controlar que no se cree una bola dentro de otra.
 	if( m_event.mouse.leftButton.down ) {
 		m_balls[m_numBalls++] = new CBall( m_width, m_height, CVector3D( (float)m_event.mouse.x / m_width, (float)m_event.mouse.y / m_height, 0.0f ) );
 	}

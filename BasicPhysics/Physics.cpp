@@ -81,6 +81,7 @@ void CPhysics::UpdateDymanicPos( sDynamicGeometryCircle &geom, float timeDiff )
 			}
 	}
 
+	//Comprobamos colisión Circulo-Segmento.
 	for (unsigned int i = 0; i < m_numStatic; i++)
 	{
 		numSegments = m_staticActors[i]->numSegments;
@@ -94,11 +95,19 @@ void CPhysics::UpdateDymanicPos( sDynamicGeometryCircle &geom, float timeDiff )
 
 				CVector3D incidente = geom.actorInfo.vel;
 				incidente.Negate();
+
+				//Aquí calcularíamos el ángulo de reflexión a partir del ángulo incidente y la normal.
 				float angle = atan2(incidente.x, incidente.y) - atan2(normal.x, normal.y);
+				
+				//El ángulo calculado sería el que forma el incidente y la normal, por tanto lo multiplicamos por dos.
 				angle *= 2;
+				//Calculamos las coordenadas del nuevo vector a partir del ángulo.
 				float x2 = incidente.x * cos(angle) - incidente.y * sin(angle);
 				float y2 = incidente.x * sin(angle) + incidente.y * cos(angle);
-				geom.actorInfo.vel = CVector3D(x2, y2, 0.0f) * (sqrt(pow(geom.actorInfo.vel.x, 2) + pow(geom.actorInfo.vel.y, 2)) * geom.actorInfo.mat.restitution);
+
+				//Calculamos el módulo del vector velocidad incidente con el coeficiente de restitución para aplicarselo al vector reflexión
+				geom.actorInfo.vel = CVector3D(x2, y2, 0.0f) * geom.actorInfo.vel.GetMagnitude() * geom.actorInfo.mat.restitution;
+				
 				if(geom.actorInfo.report)
 					geom.actorInfo.report->onContact(normal);
 			}
